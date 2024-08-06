@@ -1,19 +1,29 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 project.group = 'com.cdads'
 project.description = '''CDAds Sample App'''
 project.version = '1.0.0'
 
 android {
-    compileSdkVersion 27
+    compileSdk 34
+    buildFeatures {
+        buildConfig = true
+        compose true
+    }
     defaultConfig {
         applicationId "com.chalkdigital.android.cdads_sample"
-        minSdkVersion 21
-        targetSdkVersion 26
+        minSdk 26
+        targetSdk 34
         multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
     buildTypes {
         release {
@@ -26,28 +36,54 @@ android {
             resolutionStrategy.force 'com.android.support:appcompat-v7:27.1.1'
         }
     }
-    buildToolsVersion '28.0.3'
+    namespace 'com.chalkdigital.android.cdads_sample'
+    namespace 'com.chalkdigital.android.cdads_sample'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.1'
+    }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation 'com.google.android.gms:play-services-ads:15.0.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:support-annotations:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.chalkdigital:cdads:2.1.3'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
+    implementation 'androidx.activity:activity-compose:1.9.1'
+    implementation platform('androidx.compose:compose-bom:2023.08.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'com.github.ChalkRnd:cdads:2.1.6'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.11.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.media3:media3-exoplayer:1.4.0'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.4.0'
+    implementation 'androidx.media3:media3-ui:1.4.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation "androidx.preference:preference-ktx:1.2.1"
     testImplementation 'junit:junit:4.12'
-//    implementation files('/Users/arungupta/Workspace/CDAdsSampleProject/CDAdsSample/volley.jar')
-//    implementation files('/Users/arungupta/Workspace/CDAdsSampleProject/CDAdsSample/org.eclipse.paho.android.service-1.1.1.jar')
-//    implementation files('/Users/arungupta/Workspace/CDAdsSampleProject/CDAdsSample/org.eclipse.paho.client.mqttv3-1.1.1.jar')
 }

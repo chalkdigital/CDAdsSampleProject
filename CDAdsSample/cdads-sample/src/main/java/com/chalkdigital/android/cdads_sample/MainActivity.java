@@ -10,10 +10,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,10 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-
 import com.chalkdigital.ads.CDAdErrorCode;
 import com.chalkdigital.common.CDAdRequest;
 import com.chalkdigital.common.CDAdSize;
+import com.chalkdigital.common.logging.CDAdLog;
 import com.chalkdigital.interstitial.ads.CDAdInterstitial;
 import com.chalkdigital.ads.CDAdView;
 import com.chalkdigital.interstitial.ads.CDAdVideoInterstitial;
@@ -58,89 +58,82 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            String partnerId = "";
-            String bundleId = getApplicationContext().getPackageName();
-            String cat = "";
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                WebView.setWebContentsDebuggingEnabled(true);
+        String partnerId = "";
+        String bundleId = getApplicationContext().getPackageName();
+        String cat = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+        sharedPreferences = getSharedPreferences(SettingsActivity.sharedPreferencesFileName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (!sharedPreferences.getBoolean("isSettingsSaved", false)){
+            try {
+                partnerId = getResources().getText(getResources().getIdentifier("CDADS_PARTNER_ID", "string", getPackageName())).toString();
+                editor.putString("partnerId", partnerId);
+            } catch (Exception e) {
+
             }
-            sharedPreferences = getSharedPreferences(SettingsActivity.sharedPreferencesFileName, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            if (!sharedPreferences.getBoolean("isSettingsSaved", false)){
-                try {
-                    partnerId = getResources().getText(getResources().getIdentifier("CDADS_PARTNER_ID", "string", getPackageName())).toString();
-                    editor.putString("partnerId", partnerId);
-                } catch (Exception e) {
+            try {
+                bundleId = getResources().getText(getResources().getIdentifier("CDADS_BUNDLE_ID", "string", getPackageName())).toString();
+                editor.putString("bundleId", bundleId);
+            } catch (Exception e) {
 
-                }
-                try {
-                    bundleId = getResources().getText(getResources().getIdentifier("CDADS_BUNDLE_ID", "string", getPackageName())).toString();
-                    editor.putString("bundleId", bundleId);
-                } catch (Exception e) {
+            }
+            try {
+                cat = getResources().getText(getResources().getIdentifier("CDADS_CAT", "string", getPackageName())).toString();
+                editor.putString("cat", cat);
+            } catch (Exception e) {
 
-                }
-                try {
-                    cat = getResources().getText(getResources().getIdentifier("CDADS_CAT", "string", getPackageName())).toString();
-                    editor.putString("cat", cat);
-                } catch (Exception e) {
-
-                }
-
-            }else if(sharedPreferences.getString("partnerId", "").equals("")){
-                try {
-                    partnerId = getResources().getText(getResources().getIdentifier("CDADS_PARTNER_ID", "string", getPackageName())).toString();
-                    editor.putString("partnerId", partnerId);
-                } catch (Exception e) {
-
-                }
             }
 
-            else if(sharedPreferences.getString("bundleId", "").equals("")){
-                try {
-                    bundleId = getResources().getText(getResources().getIdentifier("CDADS_BUNDLE_ID", "string", getPackageName())).toString();
-                    editor.putString("bundleId", bundleId);
-                } catch (Exception e) {
+        }else if(sharedPreferences.getString("partnerId", "").equals("")){
+            try {
+                partnerId = getResources().getText(getResources().getIdentifier("CDADS_PARTNER_ID", "string", getPackageName())).toString();
+                editor.putString("partnerId", partnerId);
+            } catch (Exception e) {
 
-                }
             }
+        }
 
-            else if(sharedPreferences.getString("cat", "").equals("")){
-                try {
-                    cat = getResources().getText(getResources().getIdentifier("CDADS_CAT", "string", getPackageName())).toString();
-                    editor.putString("cat", cat);
-                } catch (Exception e) {
+        else if(sharedPreferences.getString("bundleId", "").equals("")){
+            try {
+                bundleId = getResources().getText(getResources().getIdentifier("CDADS_BUNDLE_ID", "string", getPackageName())).toString();
+                editor.putString("bundleId", bundleId);
+            } catch (Exception e) {
 
-                }
             }
+        }
 
-            editor.putString("placementId", "");
-            editor.putBoolean("isSettingsSaved", true);
-            editor.commit();
-            setContentView(R.layout.activity_main);
-            mSmallBannerView = findViewById(R.id.smallBannerView);
-            mLargeBannerView = findViewById(R.id.largeBannerView);
-            mProgressBar = findViewById(R.id.progressBar2);
-            mSmallBannerView.setCDAdViewListener(this);
-            mLargeBannerView.setCDAdViewListener(this);
-            mSmallBannerView.setLocationAutoUpdateEnabled(true);
-            mLargeBannerView.setLocationAutoUpdateEnabled(true);
-            mLargeBannerView.setAdAutoRefreshEnabled(true);     //Default value is false
-            mSmallBannerView.setAdAutoRefreshEnabled(true);
-            mLargeBannerView.setTesting(true);
-            mSmallBannerView.setTesting(true);
-            mLargeBannerView.setBundleIdentifier(sharedPreferences.getString("bundleId", ""));
-            mLargeBannerView.setCategory(sharedPreferences.getString("cat", ""));
-            mSmallBannerView.setBundleIdentifier(sharedPreferences.getString("bundleId", ""));
-            mSmallBannerView.setCategory(sharedPreferences.getString("cat", ""));
+        else if(sharedPreferences.getString("cat", "").equals("")){
+            try {
+                cat = getResources().getText(getResources().getIdentifier("CDADS_CAT", "string", getPackageName())).toString();
+                editor.putString("cat", cat);
+            } catch (Exception e) {
 
-            mConstraintLayout = findViewById(R.id.native_video_ad_space);
+            }
+        }
 
-            mediaViewBinder = new MediaViewBinder.Builder(R.layout.native_video_ad_layout)
-                    .mediaLayoutId(R.id.native_ad_video_view)
-                    .iconImageId(R.id.native_ad_icon_image)
-                    .titleId(R.id.native_ad_title)
-                    .textId(R.id.native_ad_text)
-                    .build();
+        editor.putString("placementId", "");
+        editor.putBoolean("isSettingsSaved", true);
+        editor.commit();
+        setContentView(R.layout.activity_main);
+        mSmallBannerView = findViewById(R.id.smallBannerView);
+        mLargeBannerView = findViewById(R.id.largeBannerView);
+        mProgressBar = findViewById(R.id.progressBar2);
+        mSmallBannerView.setCDAdViewListener(this);
+        mLargeBannerView.setCDAdViewListener(this);
+        mSmallBannerView.setLocationAutoUpdateEnabled(true);
+        mLargeBannerView.setLocationAutoUpdateEnabled(true);
+        mLargeBannerView.setAdAutoRefreshEnabled(true);     //Default value is false
+        mSmallBannerView.setAdAutoRefreshEnabled(true);
+        mLargeBannerView.setTesting(false);
+        mSmallBannerView.setTesting(false);
+        mLargeBannerView.setBundleIdentifier(sharedPreferences.getString("bundleId", ""));
+        mLargeBannerView.setCategory(sharedPreferences.getString("cat", ""));
+        mSmallBannerView.setBundleIdentifier(sharedPreferences.getString("bundleId", ""));
+        mSmallBannerView.setCategory(sharedPreferences.getString("cat", ""));
+
+
 
 
 
@@ -152,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
             mCDAdVideoInterstitial = new CDAdVideoInterstitial(this);
             mCDAdVideoInterstitial.setLocationAutoUpdateEnabled(true);
             mCDAdVideoInterstitial.setInterstitialVideoAdListener(this);
-            mCDAdVideoInterstitial.setTesting(true);
+            mCDAdVideoInterstitial.setTesting(false);
             mCDAdVideoInterstitial.setBundleIdentifier(sharedPreferences.getString("bundleId", ""));
             mCDAdVideoInterstitial.setCategory(sharedPreferences.getString("cat", ""));
         }
@@ -189,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
             CDAdSampleApplication.mCDAdInterstitial.setInterstitialAdListener(this);
             CDAdSampleApplication.mCDAdInterstitial.setBundleIdentifier(sharedPreferences.getString("bundleId", ""));
             CDAdSampleApplication.mCDAdInterstitial.setCategory(sharedPreferences.getString("cat", ""));
-            CDAdSampleApplication.mCDAdInterstitial.setTesting(true);
-            CDAdSampleApplication.mCDAdInterstitial.setCdAdSize(CDAdSize.CDAdSizeConstant.CDAdSize728X250);
+            CDAdSampleApplication.mCDAdInterstitial.setTesting(false);
+            CDAdSampleApplication.mCDAdInterstitial.setCdAdSize(CDAdSize.CDAdSizeConstant.CDAdSize320X480);
         }
         HashMap<String, String > map = new HashMap<>();
         map.put("gender", "male");
@@ -346,17 +339,17 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
 
     @Override
     public void onInterstitialShown(CDAdInterstitial cdAdInterstitial) {
-
+        CDAdLog.i("onInterstitialShown");
     }
 
     @Override
     public void onInterstitialClicked(CDAdInterstitial cdAdInterstitial) {
-
+        CDAdLog.i("onInterstitialClicked");
     }
 
     @Override
     public void onInterstitialDismissed(CDAdInterstitial cdAdInterstitial) {
-
+        CDAdLog.i("onInterstitialDismissed");
     }
 
     @Override
@@ -381,22 +374,22 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
 
     @Override
     public void onInterstitialVideoShown(final CDAdVideoInterstitial videoInterstitial) {
-
+        CDAdLog.i("onInterstitialVideoShown");
     }
 
     @Override
     public void onInterstitialVideoClicked(final CDAdVideoInterstitial videoInterstitial) {
-
+        CDAdLog.i("onInterstitialVideoClicked");
     }
 
     @Override
     public void onInterstitialVideoDismissed(final CDAdVideoInterstitial videoInterstitial) {
-
+        CDAdLog.i("onInterstitialVideoDismissed");
     }
 
     @Override
     public void onInterstitialVideoEnded(final CDAdVideoInterstitial videoInterstitial) {
-
+        CDAdLog.d("onInterstitialVideoEnded");
     }
 
     @Override
@@ -499,12 +492,12 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
 
     @Override
     public void onNativeVideoEnded(final BaseNativeAd nativeAd) {
-
+        CDAdLog.d("onNativeVideoEnded");
     }
 
     @Override
     public void onNativeClicked(final BaseNativeAd nativeAd) {
-
+        CDAdLog.d("onNativeVideoClicked");
     }
 
     private boolean isAppIsInBackground(Context context) {

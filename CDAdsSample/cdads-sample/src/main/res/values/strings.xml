@@ -4,11 +4,8 @@
     <string name="CDADS_CAT">IAB1-6</string>
     <string name="SERVER_URL">https://e.cmcd1.com</string>
     <string name="SERVER_PATH">/cmsdk</string>
-    <string name="VPAID_SOURCE_URL">https://s3.amazonaws.com/chalkiosapp/vpaid/vpaid_2.0/cd_sdk_vpaid_html_2.0.html</string>
+    <string name="VPAID_SOURCE_URL">https://chalkiosapp.s3.amazonaws.com/vpaid/vpaid_2.0/sdk_vpaid_html_2.0.html</string>
     <string name="CDADS_DEBUG_URL"> https://ds.chalkdigital.com/debug</string>
-    <string name="CD_BEACON_KEY">midnightrambler</string>
-    <string name="CD_BEACON_SECRET_KEY">drawlswiftbayonet</string>
-    <string name="CD_BEACON_HOST">https://gw.pinable.jp</string>
 
     <string name="app_name">CDAdsSample</string>
     <string name="title_activity_settings">Settings</string>
