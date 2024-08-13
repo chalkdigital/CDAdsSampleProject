@@ -31,7 +31,7 @@
         android:textColor="@android:color/black"
         android:onClick="loadSmallBanner"
         android:text="Load 320X50\nBanner"
-        app:layout_constraintBottom_toTopOf="@id/button5"
+        app:layout_constraintBottom_toTopOf="@id/button6"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/button3"
         />
@@ -60,26 +60,15 @@
         app:layout_constraintRight_toRightOf="parent"
         />
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/button6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="70dp"
         android:textColor="@android:color/black"
-        android:onClick="loadNativeVideo"
-        android:text="Load\nNative Video"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/button6"
-        />
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
         android:onClick="loadInterstitialVideo"
         android:text="Load\nInterstitial Video"
-        app:layout_constraintBottom_toBottomOf="@id/button5"
-        app:layout_constraintLeft_toRightOf="@id/button5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
 
@@ -125,18 +114,6 @@
         app:layout_constraintBottom_toBottomOf="@id/largePlaceholder"
         app:layout_constraintLeft_toLeftOf="@id/largePlaceholder"
         app:layout_constraintRight_toRightOf="@id/largePlaceholder"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/native_video_ad_space"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        app:layout_constraintBottom_toBottomOf="@id/largePlaceholder"
-        app:layout_constraintLeft_toLeftOf="@id/largePlaceholder"
-        app:layout_constraintRight_toRightOf="@id/largePlaceholder"
-        >
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
         android:id="@+id/progressBar2"

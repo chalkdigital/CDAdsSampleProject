@@ -26,7 +26,6 @@
             android:name=".DisplayService"
             android:enabled="true"
             android:exported="false"></service>
-
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

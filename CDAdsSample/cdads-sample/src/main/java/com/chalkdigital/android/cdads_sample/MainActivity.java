@@ -6,14 +6,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import androidx.core.app.NotificationCompat;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,26 +16,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
 import com.chalkdigital.ads.CDAdErrorCode;
-import com.chalkdigital.common.CDAdRequest;
+import com.chalkdigital.ads.CDAdView;
 import com.chalkdigital.common.CDAdSize;
 import com.chalkdigital.common.logging.CDAdLog;
 import com.chalkdigital.interstitial.ads.CDAdInterstitial;
-import com.chalkdigital.ads.CDAdView;
 import com.chalkdigital.interstitial.ads.CDAdVideoInterstitial;
-import com.chalkdigital.nativeads.CDAdNative;
-import com.chalkdigital.nativeads.CDAdVideoNativeAdRenderer;
-import com.chalkdigital.nativeads.BaseNativeAd;
-import com.chalkdigital.nativeads.MediaViewBinder;
-import com.chalkdigital.nativeads.NativeAd;
-import com.chalkdigital.nativeads.NativeErrorCode;
 import com.chalkdigital.nativeads.VideoConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements CDAdView.CDAdViewListener, CDAdInterstitial.InterstitialAdListener, CDAdVideoInterstitial.InterstitialVideoAdListener, CDAdNative.CDAdNativeAdListener {
+public class MainActivity extends AppCompatActivity implements CDAdView.CDAdViewListener, CDAdInterstitial.InterstitialAdListener, CDAdVideoInterstitial.InterstitialVideoAdListener {
     private CDAdView mSmallBannerView;
     private CDAdView mLargeBannerView;
     private CDAdVideoInterstitial mCDAdVideoInterstitial;
@@ -48,10 +41,6 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
     private SharedPreferences sharedPreferences;
     private Menu mMenu;
     private AlertDialog alert11;
-    private MediaViewBinder mediaViewBinder;
-    private CDAdNative mCDAdNative;
-    private NativeAd mNativeAd;
-    private ConstraintLayout mConstraintLayout;
 
     private static final String Notification_Action = "Notification_Action";
 
@@ -71,19 +60,19 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
                 partnerId = getResources().getText(getResources().getIdentifier("CDADS_PARTNER_ID", "string", getPackageName())).toString();
                 editor.putString("partnerId", partnerId);
             } catch (Exception e) {
-
+                CDAdLog.e(e.getMessage());
             }
             try {
                 bundleId = getResources().getText(getResources().getIdentifier("CDADS_BUNDLE_ID", "string", getPackageName())).toString();
                 editor.putString("bundleId", bundleId);
             } catch (Exception e) {
-
+                CDAdLog.e(e.getMessage());
             }
             try {
                 cat = getResources().getText(getResources().getIdentifier("CDADS_CAT", "string", getPackageName())).toString();
                 editor.putString("cat", cat);
             } catch (Exception e) {
-
+                CDAdLog.e(e.getMessage());
             }
 
         }else if(sharedPreferences.getString("partnerId", "").equals("")){
@@ -91,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
                 partnerId = getResources().getText(getResources().getIdentifier("CDADS_PARTNER_ID", "string", getPackageName())).toString();
                 editor.putString("partnerId", partnerId);
             } catch (Exception e) {
-
+                CDAdLog.e(e.getMessage());
             }
         }
 
@@ -100,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
                 bundleId = getResources().getText(getResources().getIdentifier("CDADS_BUNDLE_ID", "string", getPackageName())).toString();
                 editor.putString("bundleId", bundleId);
             } catch (Exception e) {
-
+                CDAdLog.e(e.getMessage());
             }
         }
 
@@ -109,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
                 cat = getResources().getText(getResources().getIdentifier("CDADS_CAT", "string", getPackageName())).toString();
                 editor.putString("cat", cat);
             } catch (Exception e) {
-
+                CDAdLog.e(e.getMessage());
             }
         }
 
@@ -137,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
 
 
 
+
     }
 
     public void loadInterstitialVideo(View v){
@@ -156,22 +146,6 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
         map.put("language", "en");
         VideoConfiguration videoConfiguration = new VideoConfiguration.Builder().build(this);
         mCDAdVideoInterstitial.requestInterstitialVideo(this,videoConfiguration, map, sharedPreferences.getString("partnerId", ""), sharedPreferences.getString("placementId", ""));
-    }
-
-    public void loadNativeVideo(View v){
-        mProgressBar.setVisibility(View.VISIBLE);
-        dismissIfAlertDialogVisible();
-        clearAllViews();
-        CDAdVideoNativeAdRenderer cdAdVideoNativeAdRenderer = new CDAdVideoNativeAdRenderer(mediaViewBinder);
-        mCDAdNative = new CDAdNative(this, this);
-        mCDAdNative.registerAdRenderer(cdAdVideoNativeAdRenderer);
-        CDAdRequest cdAdRequest = (new CDAdRequest.Builder()).build(this);
-        cdAdRequest.bundleId = sharedPreferences.getString("bundleId", "");
-        cdAdRequest.partnerId = sharedPreferences.getString("partnerId", "");
-        cdAdRequest.placementId = sharedPreferences.getString("placementId", "");
-        cdAdRequest.cat = sharedPreferences.getString("cat", "");
-        cdAdRequest.testing = true;
-        mCDAdNative.makeRequest(cdAdRequest);
     }
 
     public void loadInterstitial(View v){
@@ -195,10 +169,6 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
     }
 
     private void clearAllViews(){
-        if (mNativeAd!=null){
-            mNativeAd.clear(mConstraintLayout);
-            mConstraintLayout.setVisibility(View.INVISIBLE);
-        }
         mLargeBannerView.setVisibility(View.INVISIBLE);
         mLargeBannerView.setAdAutoRefreshEnabled(false);
         mSmallBannerView.setVisibility(View.INVISIBLE);
@@ -307,22 +277,16 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
 
             builder1.setPositiveButton(
                     "Open",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            if (cdAdInterstitial!=null && cdAdInterstitial.isReady()) {
-                                cdAdInterstitial.show();
-                            }
+                    (dialog, id) -> {
+                        dialog.cancel();
+                        if (cdAdInterstitial!=null && cdAdInterstitial.isReady()) {
+                            cdAdInterstitial.show();
                         }
                     });
 
             builder1.setNegativeButton(
                     "Cancel",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
+                    (dialog, id) -> dialog.cancel());
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
@@ -462,42 +426,10 @@ public class MainActivity extends AppCompatActivity implements CDAdView.CDAdView
 
         builder1.setNegativeButton(
                 "Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, id) -> dialog.cancel());
 
         alert11 = builder1.create();
         alert11.show();
-    }
-
-    @Override
-    public void onNativeLoad(final NativeAd nativeAd) {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        dismissIfAlertDialogVisible();
-        View adView = nativeAd.createAdView(MainActivity.this, mConstraintLayout);
-        mNativeAd = nativeAd;
-        nativeAd.prepare(adView);
-        nativeAd.renderAdView(adView);
-        mConstraintLayout.addView(adView);
-        mConstraintLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onNativeFail(final NativeErrorCode errorCode) {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        showAlertDialogWithMessage("Failed to load Native Video Ad");
-    }
-
-    @Override
-    public void onNativeVideoEnded(final BaseNativeAd nativeAd) {
-        CDAdLog.d("onNativeVideoEnded");
-    }
-
-    @Override
-    public void onNativeClicked(final BaseNativeAd nativeAd) {
-        CDAdLog.d("onNativeVideoClicked");
     }
 
     private boolean isAppIsInBackground(Context context) {

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.chalkdigital:cdads:2.1.9@aar" external-system-id="GRADLE">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/99e7b32ba597a9e938c6f8680eafb0c6/transformed/cdads-2.1.9/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/99e7b32ba597a9e938c6f8680eafb0c6/transformed/cdads-2.1.9/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/99e7b32ba597a9e938c6f8680eafb0c6/transformed/cdads-2.1.9/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.chalkdigital/cdads/2.1.9/514a716e7fc16987a3682cde66da22cf8ee7ab9d/cdads-2.1.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
